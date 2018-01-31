@@ -3,13 +3,7 @@ import numpy as np
 import json
 import peakutils
 import matplotlib.pyplot as plt
-from sklearn.svm import LinearSVC
-from sklearn.grid_search import GridSearchCV
-from sklearn.learning_curve import validation_curve
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
-from sklearn import tree
 import seaborn as sns
 
 def load_json(file):
@@ -80,6 +74,7 @@ def process_sequence(file):
     y_accl_mean, y_accl_sd, y_accl_peaks = get_mean_sd_peaks(y_accl)
     z_accl_mean, z_accl_sd, z_accl_peaks = get_mean_sd_peaks(z_accl)
 
+    '''
     x_gyro_mean, x_gyro_sd, x_gyro_peaks = get_mean_sd_peaks(x_gyro)
     y_gyro_mean, y_gyro_sd, y_gyro_peaks = get_mean_sd_peaks(y_gyro)
     z_gyro_mean, z_gyro_sd, z_gyro_peaks = get_mean_sd_peaks(z_gyro)
@@ -87,6 +82,7 @@ def process_sequence(file):
     x_mag_mean, x_mag_sd, x_mag_peaks = get_mean_sd_peaks(x_mag)
     y_mag_mean, y_mag_sd, y_mag_peaks = get_mean_sd_peaks(y_mag)
     z_mag_mean, z_mag_sd, z_mag_peaks = get_mean_sd_peaks(z_mag)
+    '''
 
     clean_data = {
         'activity': [],
@@ -112,24 +108,27 @@ def process_sequence(file):
         clean_data['z_accl_mean'].append(z_accl_mean[i])
         clean_data['z_accl_sd'].append(z_accl_sd[i])
         clean_data['z_accl_peaks'].append(z_accl_peaks[i])
-        # clean_data['x_gyro_mean'].append(x_gyro_mean[i])
-        # clean_data['x_gyro_sd'].append(x_gyro_sd[i])
-        # clean_data['x_gyro_peaks'].append(x_gyro_peaks[i])
-        # clean_data['y_gyro_mean'].append(y_gyro_mean[i])
-        # clean_data['y_gyro_sd'].append(y_gyro_sd[i])
-        # clean_data['y_gyro_peaks'].append(y_gyro_peaks[i])
-        # clean_data['z_gyro_mean'].append(z_gyro_mean[i])
-        # clean_data['z_gyro_sd'].append(z_gyro_sd[i])
-        # clean_data['z_gyro_peaks'].append(z_gyro_peaks[i])
-        # clean_data['x_mag_mean'].append(x_mag_mean[i])
-        # clean_data['x_mag_sd'].append(x_mag_sd[i])
-        # clean_data['x_mag_peaks'].append(x_mag_peaks[i])
-        # clean_data['y_mag_mean'].append(y_mag_mean[i])
-        # clean_data['y_mag_sd'].append(y_mag_sd[i])
-        # clean_data['y_mag_peaks'].append(y_mag_peaks[i])
-        # clean_data['z_mag_mean'].append(z_mag_mean[i])
-        # clean_data['z_mag_sd'].append(z_mag_sd[i])
-        # clean_data['z_mag_peaks'].append(z_mag_peaks[i])
+
+        '''
+        clean_data['x_gyro_mean'].append(x_gyro_mean[i])
+        clean_data['x_gyro_sd'].append(x_gyro_sd[i])
+        clean_data['x_gyro_peaks'].append(x_gyro_peaks[i])
+        clean_data['y_gyro_mean'].append(y_gyro_mean[i])
+        clean_data['y_gyro_sd'].append(y_gyro_sd[i])
+        clean_data['y_gyro_peaks'].append(y_gyro_peaks[i])
+        clean_data['z_gyro_mean'].append(z_gyro_mean[i])
+        clean_data['z_gyro_sd'].append(z_gyro_sd[i])
+        clean_data['z_gyro_peaks'].append(z_gyro_peaks[i])
+        clean_data['x_mag_mean'].append(x_mag_mean[i])
+        clean_data['x_mag_sd'].append(x_mag_sd[i])
+        clean_data['x_mag_peaks'].append(x_mag_peaks[i])
+        clean_data['y_mag_mean'].append(y_mag_mean[i])
+        clean_data['y_mag_sd'].append(y_mag_sd[i])
+        clean_data['y_mag_peaks'].append(y_mag_peaks[i])
+        clean_data['z_mag_mean'].append(z_mag_mean[i])
+        clean_data['z_mag_sd'].append(z_mag_sd[i])
+        clean_data['z_mag_peaks'].append(z_mag_peaks[i])
+        '''
 
     df = pd.DataFrame(clean_data)
     return df
