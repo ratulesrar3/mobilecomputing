@@ -153,7 +153,7 @@ def master():
     master['activity_factor'] = pd.factorize(master['activity'])[0]
     return master
 
-def splits(df):
+def splits(df, split_size=0.25):
     y = df['activity_factor']
     X = df.drop(['activity_factor', 'activity'], axis=1)
-    return train_test_split(X, y, test_size=0.25, random_state=1234)
+    return train_test_split(X, y, test_size=split_size, random_state=1234)
