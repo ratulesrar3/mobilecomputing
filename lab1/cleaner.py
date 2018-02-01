@@ -27,7 +27,7 @@ def get_sequence(data_list, sensor):
         lst = []
         for j in range(len(data_list[i]['seq'])):
             lst.append(data_list[i]['seq'][j]['data'][sensor])
-            l.append(lst)
+        l.append(lst)
 
     return l
 
@@ -147,11 +147,13 @@ def process_test_sequence(filename):
     x_accl = []
     y_accl = []
     z_accl = []
+    time = []
     for seq in data['seq']:
         x_accl.append(seq['data']['xAccl'])
         y_accl.append(seq['data']['yAccl'])
         z_accl.append(seq['data']['zAccl'])
-        
+        time.append(seq['time'])
+
     # calculate means for data sequence
     x_accl_mean = np.mean(x_accl)
     y_accl_mean = np.mean(y_accl)
@@ -175,7 +177,7 @@ def process_test_sequence(filename):
     }
 
     df = pd.DataFrame(clean_data, index=[0])
-    return df
+    return df, time
 
 def plot_traces(plots, activity):
     x,y,z = plots
@@ -204,11 +206,25 @@ def splits(df, split_size=0.25):
 
 def test():
     test = []
+    time_list =[]
     for i in ['1','2','3','4']:
-        df = process_test_sequence('test-data/team9_' + i + '.txt')
+        df, time = process_test_sequence('test-data/team9_' + i + '.txt')
+        time_list.append(time)
         test += [df]
     test = pd.concat(test)
     test['trace_number'] = ['1','2','3','4']
     test = test.set_index('trace_number')
 
-    return test.drop(['activity'], axis=1)
+    return test.drop(['activity'], axis=1), time_list
+
+def calc_speed(df, time_list, trace_num):
+	'''
+	Given a df and list of time points, calculate average speed using acceleration data
+	'''
+	time_elapsed = time_list[trace_num][-1] - time_list[trace_num][0]
+	x = df.iloc[trace_num]['x_accl_mean']
+	y = df.iloc[trace_num]['y_accl_mean']
+	z = df.iloc[trace_num]['z_accl_mean']
+	a = np.sqrt(x + y + z)
+
+	return a*time_elapsed
