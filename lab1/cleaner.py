@@ -45,133 +45,137 @@ def get_mean_sd_peaks(seq_data):
 
     return means, stds, peaks
 
-def process_sequence(filename, train=True):
+def process_sequence(filename):
     '''
     Loads data and creates dictionary of calculations from accelerometer data
     '''
     data = load_json(filename)
 
     # obtain actitivy from trace
-    if train:
-        activity = data[0]['type']
+    activity = data[0]['type']
 
-        # obtain accelerometer data from each axis
-        x_accl = get_sequence(data, 'xAccl')
-        y_accl = get_sequence(data, 'yAccl')
-        z_accl = get_sequence(data, 'zAccl')
+    # obtain accelerometer data from each axis
+    x_accl = get_sequence(data, 'xAccl')
+    y_accl = get_sequence(data, 'yAccl')
+    z_accl = get_sequence(data, 'zAccl')
+    '''
+    # obtain gyroscope data from each axis
+    x_gyro = get_sequence(data, 'xGyro')
+    y_gyro = get_sequence(data, 'yGyro')
+    z_gyro = get_sequence(data, 'zGyro')
+
+    # obtain mag sensor data from each axis
+    x_mag = get_sequence(data, 'xMag')
+    y_mag = get_sequence(data, 'yMag')
+    z_mag = get_sequence(data, 'zMag')
+    '''
+
+    # calculate means, sd, num peaks for data sequence
+    x_accl_mean, x_accl_sd, x_accl_peaks = get_mean_sd_peaks(x_accl)
+    y_accl_mean, y_accl_sd, y_accl_peaks = get_mean_sd_peaks(y_accl)
+    z_accl_mean, z_accl_sd, z_accl_peaks = get_mean_sd_peaks(z_accl)
+
+    '''
+    x_gyro_mean, x_gyro_sd, x_gyro_peaks = get_mean_sd_peaks(x_gyro)
+    y_gyro_mean, y_gyro_sd, y_gyro_peaks = get_mean_sd_peaks(y_gyro)
+    z_gyro_mean, z_gyro_sd, z_gyro_peaks = get_mean_sd_peaks(z_gyro)
+
+    x_mag_mean, x_mag_sd, x_mag_peaks = get_mean_sd_peaks(x_mag)
+    y_mag_mean, y_mag_sd, y_mag_peaks = get_mean_sd_peaks(y_mag)
+    z_mag_mean, z_mag_sd, z_mag_peaks = get_mean_sd_peaks(z_mag)
+    '''
+
+    clean_data = {
+        'activity': [],
+        'x_accl_mean': [], 'x_accl_sd': [], 'x_accl_peaks': [],
+        'y_accl_mean': [], 'y_accl_sd': [], 'y_accl_peaks': [],
+        'z_accl_mean': [], 'z_accl_sd': [], 'z_accl_peaks': []
+        # 'x_gyro_mean': [], 'x_gyro_sd': [], 'x_gyro_peaks': [],
+        # 'y_gyro_mean': [], 'y_gyro_sd': [], 'y_gyro_peaks': [],
+        # 'z_gyro_mean': [], 'z_gyro_sd': [], 'z_gyro_peaks': [],
+        # 'x_mag_mean': [], 'x_mag_sd': [], 'x_mag_peaks': [],
+        # 'y_mag_mean': [], 'y_mag_sd': [], 'y_mag_peaks': [],
+        # 'z_mag_mean': [], 'z_mag_sd': [], 'z_mag_peaks': []
+    }
+
+    for i in range(len(x_accl_mean)):
+        clean_data['activity'].append(activity)
+        clean_data['x_accl_mean'].append(x_accl_mean[i])
+        clean_data['x_accl_sd'].append(x_accl_sd[i])
+        clean_data['x_accl_peaks'].append(x_accl_peaks[i])
+        clean_data['y_accl_mean'].append(y_accl_mean[i])
+        clean_data['y_accl_sd'].append(y_accl_sd[i])
+        clean_data['y_accl_peaks'].append(y_accl_peaks[i])
+        clean_data['z_accl_mean'].append(z_accl_mean[i])
+        clean_data['z_accl_sd'].append(z_accl_sd[i])
+        clean_data['z_accl_peaks'].append(z_accl_peaks[i])
+
         '''
-        # obtain gyroscope data from each axis
-        x_gyro = get_sequence(data, 'xGyro')
-        y_gyro = get_sequence(data, 'yGyro')
-        z_gyro = get_sequence(data, 'zGyro')
-
-        # obtain mag sensor data from each axis
-        x_mag = get_sequence(data, 'xMag')
-        y_mag = get_sequence(data, 'yMag')
-        z_mag = get_sequence(data, 'zMag')
+        clean_data['x_gyro_mean'].append(x_gyro_mean[i])
+        clean_data['x_gyro_sd'].append(x_gyro_sd[i])
+        clean_data['x_gyro_peaks'].append(x_gyro_peaks[i])
+        clean_data['y_gyro_mean'].append(y_gyro_mean[i])
+        clean_data['y_gyro_sd'].append(y_gyro_sd[i])
+        clean_data['y_gyro_peaks'].append(y_gyro_peaks[i])
+        clean_data['z_gyro_mean'].append(z_gyro_mean[i])
+        clean_data['z_gyro_sd'].append(z_gyro_sd[i])
+        clean_data['z_gyro_peaks'].append(z_gyro_peaks[i])
+        clean_data['x_mag_mean'].append(x_mag_mean[i])
+        clean_data['x_mag_sd'].append(x_mag_sd[i])
+        clean_data['x_mag_peaks'].append(x_mag_peaks[i])
+        clean_data['y_mag_mean'].append(y_mag_mean[i])
+        clean_data['y_mag_sd'].append(y_mag_sd[i])
+        clean_data['y_mag_peaks'].append(y_mag_peaks[i])
+        clean_data['z_mag_mean'].append(z_mag_mean[i])
+        clean_data['z_mag_sd'].append(z_mag_sd[i])
+        clean_data['z_mag_peaks'].append(z_mag_peaks[i])
         '''
 
-        # calculate means, sd, num peaks for data sequence
-        x_accl_mean, x_accl_sd, x_accl_peaks = get_mean_sd_peaks(x_accl)
-        y_accl_mean, y_accl_sd, y_accl_peaks = get_mean_sd_peaks(y_accl)
-        z_accl_mean, z_accl_sd, z_accl_peaks = get_mean_sd_peaks(z_accl)
+    df = pd.DataFrame(clean_data)
+    return df
 
-        '''
-        x_gyro_mean, x_gyro_sd, x_gyro_peaks = get_mean_sd_peaks(x_gyro)
-        y_gyro_mean, y_gyro_sd, y_gyro_peaks = get_mean_sd_peaks(y_gyro)
-        z_gyro_mean, z_gyro_sd, z_gyro_peaks = get_mean_sd_peaks(z_gyro)
+def process_test_sequence(filename):
+    '''
+    Loads data and creates dictionary of calculations from accelerometer data
+    '''
+    data = load_json(filename)
 
-        x_mag_mean, x_mag_sd, x_mag_peaks = get_mean_sd_peaks(x_mag)
-        y_mag_mean, y_mag_sd, y_mag_peaks = get_mean_sd_peaks(y_mag)
-        z_mag_mean, z_mag_sd, z_mag_peaks = get_mean_sd_peaks(z_mag)
-        '''
-
-        clean_data = {
-            'activity': [],
-            'x_accl_mean': [], 'x_accl_sd': [], 'x_accl_peaks': [],
-            'y_accl_mean': [], 'y_accl_sd': [], 'y_accl_peaks': [],
-            'z_accl_mean': [], 'z_accl_sd': [], 'z_accl_peaks': []
-            # 'x_gyro_mean': [], 'x_gyro_sd': [], 'x_gyro_peaks': [],
-            # 'y_gyro_mean': [], 'y_gyro_sd': [], 'y_gyro_peaks': [],
-            # 'z_gyro_mean': [], 'z_gyro_sd': [], 'z_gyro_peaks': [],
-            # 'x_mag_mean': [], 'x_mag_sd': [], 'x_mag_peaks': [],
-            # 'y_mag_mean': [], 'y_mag_sd': [], 'y_mag_peaks': [],
-            # 'z_mag_mean': [], 'z_mag_sd': [], 'z_mag_peaks': []
-        }
-
-        for i in range(len(x_accl_mean)):
-            clean_data['activity'].append(activity)
-            clean_data['x_accl_mean'].append(x_accl_mean[i])
-            clean_data['x_accl_sd'].append(x_accl_sd[i])
-            clean_data['x_accl_peaks'].append(x_accl_peaks[i])
-            clean_data['y_accl_mean'].append(y_accl_mean[i])
-            clean_data['y_accl_sd'].append(y_accl_sd[i])
-            clean_data['y_accl_peaks'].append(y_accl_peaks[i])
-            clean_data['z_accl_mean'].append(z_accl_mean[i])
-            clean_data['z_accl_sd'].append(z_accl_sd[i])
-            clean_data['z_accl_peaks'].append(z_accl_peaks[i])
-
-            '''
-            clean_data['x_gyro_mean'].append(x_gyro_mean[i])
-            clean_data['x_gyro_sd'].append(x_gyro_sd[i])
-            clean_data['x_gyro_peaks'].append(x_gyro_peaks[i])
-            clean_data['y_gyro_mean'].append(y_gyro_mean[i])
-            clean_data['y_gyro_sd'].append(y_gyro_sd[i])
-            clean_data['y_gyro_peaks'].append(y_gyro_peaks[i])
-            clean_data['z_gyro_mean'].append(z_gyro_mean[i])
-            clean_data['z_gyro_sd'].append(z_gyro_sd[i])
-            clean_data['z_gyro_peaks'].append(z_gyro_peaks[i])
-            clean_data['x_mag_mean'].append(x_mag_mean[i])
-            clean_data['x_mag_sd'].append(x_mag_sd[i])
-            clean_data['x_mag_peaks'].append(x_mag_peaks[i])
-            clean_data['y_mag_mean'].append(y_mag_mean[i])
-            clean_data['y_mag_sd'].append(y_mag_sd[i])
-            clean_data['y_mag_peaks'].append(y_mag_peaks[i])
-            clean_data['z_mag_mean'].append(z_mag_mean[i])
-            clean_data['z_mag_sd'].append(z_mag_sd[i])
-            clean_data['z_mag_peaks'].append(z_mag_peaks[i])
-            '''
-
-        df = pd.DataFrame(clean_data)
-        return df
-
-    else:
-        # obtain actitivy from trace
-        activity = data['type']
+    # obtain actitivy from trace
+    activity = data['type']
+    
+    # obtain accelerometer data from each axis
+    x_accl = []
+    y_accl = []
+    z_accl = []
+    for seq in data['seq']:
+        x_accl.append(seq['data']['xAccl'])
+        y_accl.append(seq['data']['yAccl'])
+        z_accl.append(seq['data']['zAccl'])
         
-        # obtain accelerometer data from each axis
-        x_accl = []
-        y_accl = []
-        z_accl = []
-        for seq in data['seq']:
-            x_accl.append(seq['data']['xAccl'])
-            y_accl.append(seq['data']['yAccl'])
-            z_accl.append(seq['data']['zAccl'])
-            
-        # calculate means for data sequence
-        x_accl_mean = np.mean(x_accl)
-        y_accl_mean = np.mean(y_accl)
-        z_accl_mean = np.mean(z_accl)
-        
-        # calculate standard deviations for sequence
-        x_accl_sd = np.std(x_accl)
-        y_accl_sd = np.std(y_accl)
-        z_accl_sd = np.std(z_accl)
-        
-        # calculate number of peaks for sequence
-        x_accl_peaks = len(peakutils.indexes(x_accl, thres=0.02/max(x_accl), min_dist=0.1))
-        y_accl_peaks = len(peakutils.indexes(y_accl, thres=0.02/max(y_accl), min_dist=0.1))
-        z_accl_peaks = len(peakutils.indexes(z_accl, thres=0.02/max(z_accl), min_dist=0.1))
+    # calculate means for data sequence
+    x_accl_mean = np.mean(x_accl)
+    y_accl_mean = np.mean(y_accl)
+    z_accl_mean = np.mean(z_accl)
+    
+    # calculate standard deviations for sequence
+    x_accl_sd = np.std(x_accl)
+    y_accl_sd = np.std(y_accl)
+    z_accl_sd = np.std(z_accl)
+    
+    # calculate number of peaks for sequence
+    x_accl_peaks = len(peakutils.indexes(x_accl, thres=0.02/max(x_accl), min_dist=0.1))
+    y_accl_peaks = len(peakutils.indexes(y_accl, thres=0.02/max(y_accl), min_dist=0.1))
+    z_accl_peaks = len(peakutils.indexes(z_accl, thres=0.02/max(z_accl), min_dist=0.1))
 
-        clean_data = {
-            'activity': activity,
-            'x_accl_mean': x_accl_mean, 'x_accl_sd': x_accl_sd, 'x_accl_peaks': x_accl_peaks,
-            'y_accl_mean': y_accl_mean, 'y_accl_sd': y_accl_sd, 'y_accl_peaks': y_accl_peaks,
-            'z_accl_mean': z_accl_mean, 'z_accl_sd': z_accl_sd, 'z_accl_peaks': z_accl_peaks
-        }
+    clean_data = {
+        'activity': activity,
+        'x_accl_mean': x_accl_mean, 'x_accl_sd': x_accl_sd, 'x_accl_peaks': x_accl_peaks,
+        'y_accl_mean': y_accl_mean, 'y_accl_sd': y_accl_sd, 'y_accl_peaks': y_accl_peaks,
+        'z_accl_mean': z_accl_mean, 'z_accl_sd': z_accl_sd, 'z_accl_peaks': z_accl_peaks
+    }
 
-        df = pd.DataFrame(clean_data, index=[0])
-        return df
+    df = pd.DataFrame(clean_data, index=[0])
+    return df
 
 def plot_traces(plots, activity):
     x,y,z = plots
@@ -202,7 +206,7 @@ def test():
     test = []
 
     for i in ['1','2','3','4']:
-        df = process_sequence('test-data/team9_' + i + '.txt', train=False)
+        df = process_test_sequence('test-data/team9_' + i + '.txt')
         test += [df]
     test = pd.concat(test,axis=1).transpose()
     test['trace_number'] = ['1','2','3','4']
