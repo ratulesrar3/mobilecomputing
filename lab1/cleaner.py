@@ -18,16 +18,23 @@ def load_json(file):
 
     return data
 
-def get_sequence(data_list, sensor):
+def get_sequence(data_list, sensor, train=True):
     '''
     Return list of sensor data from data_list
     '''
     l = []
-    for i in range(len(data_list)):
+
+    if train:
+        for i in range(len(data_list)):
+            lst = []
+            for j in range(len(data_list[i]['seq'])):
+                lst.append(data_list[i]['seq'][j]['data'][sensor])
+                l.append(lst)
+    else:
         lst = []
-        for j in range(len(data_list[i]['seq'])):
-            lst.append(data_list[i]['seq'][j]['data'][sensor])
-        l.append(lst)
+        for i in range(len(data_list['seq'])):
+            lst.append(data_list['seq'][i]['data'][sensor])
+            l.append(lst)
 
     return l
 
@@ -45,29 +52,32 @@ def get_mean_sd_peaks(seq_data):
 
     return means, stds, peaks
 
-def process_sequence(file):
+def process_sequence(filename, train=True):
     '''
     Loads data and creates dictionary of calculations from accelerometer data
     '''
-    data = load_json(file)
+    data = load_json(filename)
 
     # obtain actitivy from trace
-    activity = data[0]['type']
+    if train:
+        activity = data[0]['type']
+    else:
+        activity = filename[-5:6]
 
     # obtain accelerometer data from each axis
-    x_accl = get_sequence(data, 'xAccl')
-    y_accl = get_sequence(data, 'yAccl')
-    z_accl = get_sequence(data, 'zAccl')
+    x_accl = get_sequence(data, 'xAccl', train=train)
+    y_accl = get_sequence(data, 'yAccl', train=train)
+    z_accl = get_sequence(data, 'zAccl', train=train)
 
     # obtain gyroscope data from each axis
-    x_gyro = get_sequence(data, 'xGyro')
-    y_gyro = get_sequence(data, 'yGyro')
-    z_gyro = get_sequence(data, 'zGyro')
+    x_gyro = get_sequence(data, 'xGyro', train=train)
+    y_gyro = get_sequence(data, 'yGyro', train=train)
+    z_gyro = get_sequence(data, 'zGyro', train=train)
 
     # obtain mag sensor data from each axis
-    x_mag = get_sequence(data, 'xMag')
-    y_mag = get_sequence(data, 'yMag')
-    z_mag = get_sequence(data, 'zMag')
+    x_mag = get_sequence(data, 'xMag', train=train)
+    y_mag = get_sequence(data, 'yMag', train=train)
+    z_mag = get_sequence(data, 'zMag', train=train)
 
     # calculate means, sd, num peaks for data sequence
     x_accl_mean, x_accl_sd, x_accl_peaks = get_mean_sd_peaks(x_accl)
@@ -131,7 +141,11 @@ def process_sequence(file):
         '''
 
     df = pd.DataFrame(clean_data)
-    return df
+
+    if train:
+        return df
+    else:
+        return df.iloc[0]
 
 def plot_traces(plots, activity):
     x,y,z = plots
@@ -157,3 +171,14 @@ def splits(df, split_size=0.25):
     y = df['activity_factor']
     X = df.drop(['activity_factor', 'activity'], axis=1)
     return train_test_split(X, y, test_size=split_size, random_state=1234)
+
+def test():
+    test = []
+
+    for i in ['1','2','3','4']:
+        df = process_sequence('test-data/team9_' + i + '.txt',train=False)
+        test += [df]
+    test = pd.concat(test,axis=1).transpose()
+    test['trace_number'] = ['1','2','3','4']
+
+    return test.set_index('trace_number')
