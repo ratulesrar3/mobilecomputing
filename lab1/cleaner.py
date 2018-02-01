@@ -204,12 +204,11 @@ def splits(df, split_size=0.25):
 
 def test():
     test = []
-
     for i in ['1','2','3','4']:
         df = process_test_sequence('test-data/team9_' + i + '.txt')
         test += [df]
-    test = pd.concat(test,axis=1).transpose()
+    test = pd.concat(test)
     test['trace_number'] = ['1','2','3','4']
-    test.set_index('trace_number')
+    test = test.set_index('trace_number')
 
-    return df.drop(['activity'], axis=1)
+    return test.drop(['activity'], axis=1)
