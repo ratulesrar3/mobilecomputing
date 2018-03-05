@@ -1,40 +1,46 @@
+import time
 from mypicar.front_wheels import Front_Wheels
 from mypicar.back_wheels import Back_Wheels
-import time
+from detector_wrapper import DetectorWrapper
+import numpy as np
+
+detector = DetectorWrapper()
 
 front_wheels = Front_Wheels()
 back_wheels = Back_Wheels()
 
+try:
+    while True:
+        success, ret = detector.detect()
+        if success:
+            detector.plot(ret)
+            frame, mid, left_f, right_f, ploty, left_x, right_x = ret
 
-def three_point_turn():
-    try:
-        # set front_wheels back to straight
-        front_wheels.turn_straight()
+            front_wheels.turn_straight()
+            back_wheels.speed = 17
+            back_wheels.forward()
 
-        # first part
-        # set the speed to 50
-        back_wheels.speed = 50
-        front_wheels.turn_left()
-        back_wheels.forward()
-        time.sleep(4)
-        back_wheels.stop()
+            s1, r2 = detector.detect()
 
-        # seconde part
-        # set the speed to 50
-        back_wheels.speed = 50
-        front_wheels.turn_right()
-        back_wheels.backward()
-        time.sleep(4)
-        back_wheels.stop()
+            if s1:
+                if r2[1] != mid:
+                    diff = r2[1] - mid
+                    angle = 0
 
-        # third part
-        back_wheels.forward()
-        for i in range(70, 90, 1):
-            back_wheels.speed = (90 - i) * 4
-            front_wheels.turn(i)
-            time.sleep(3. / 20)
-            back_wheels.stop()
+                    if diff > 20:
+                        angle = np.degrees(np.arctan(diff))
+                    elif diff < -20:
+                        angle = -np.degrees(np.arctan(diff))
 
-    except:
-        print "encountered error or interrupted, motor stop, turn straight"
-        back_wheels.stop()
+                    front_wheels.turn_rel(angle)
+                    back_wheels.forward()
+                    time.sleep(2)
+                    front_wheels.turn_straight()
+                    back_wheels.forward()
+
+except KeyboardInterrupt:
+    print("KeboardInterrupt Captured")
+finally:
+    detector.stop()
+    back_wheels.stop()
+    front_wheels.turn_straight()
