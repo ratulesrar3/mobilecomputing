@@ -1,6 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Anti-Sensor</string>
-    <string name="home">Home</string>
-    <string name="room">Room Scan</string>
-    <string name="location">Location Scan</string>
+
+    <string name="app_name">AndroidWifiScanner</string>
+    <string name="wifi_net_title">WiFi Networks Detected</string>
+    <string name="wifi_no_data">No networks detected</string>
+    <string name="time_text">Last Checked</string>
+    <string name="ssid_text">SSID</string>
+    <string name="bssid_text">BSSID</string>
+    <string name="rx_text">Rx</string>
+    <string name="ch_text">Ch</string>
+    <string name="freq_text">Freq</string>
+    <string name="location_access_required">Location access is required to scan for wireless activity.</string>
+    <string name="ok">OK</string>
+    <string name="location_unavailable"><b>Location could not be accessed.</b>\nThe system may have denied access.</string>
+    <string name="location_permission_available">Location permission is available. Starting scan.</string>
+    <string name="scan_devices">Scan Wireless Devices</string>
 </resources>
