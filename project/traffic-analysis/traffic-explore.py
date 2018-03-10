@@ -41,7 +41,7 @@ intersection = {'Apple_52:ab:cc',
                 'Htc_8b:b0:b3 (40:4e:36:8b:b0:b3) (TA)',
                 'Htc_8b:b0:b3 (41:4e:36:8b:b0:b3) (TA)',
                 'SamsungE_cc:32:35',
-                'Shenzhen_ca:20:ad'}k
+                'Shenzhen_ca:20:ad'}
 '''
 
 devices = {'yuxirouter':'Netgear_7a:52:d',
@@ -56,15 +56,27 @@ devices = {'yuxirouter':'Netgear_7a:52:d',
             }
 
 def preprocess(df):
+    '''
+    cleans df of packet data and discretises time variable.
+    '''
     df.dropna(inplace=True)
     df['Second'] = np.ceil(df['Time'])
     df.columns = ['Time', 'Source', 'Destination', 'Length', 'RSSI', 'Second']
     df['RSSI'] = df['RSSI'].str.strip(' dBm').astype('float64')
 
+
 def find_device(data, mac):
+    '''
+    finds list of all source devices containing a given name in a processed df.
+    '''
     return list(set(data[data['Source'].str.contains(mac)]['Source']))
 
+
 def device_packet_stats(data, device_label, known=False):
+    '''
+    returns a few summary stats on a given device in a processed df.
+    includes packets sent and received per second, average size of packets sent and received, and average RSS (received signal strength) values.
+    '''
     device = device_label
     if known:
         device = devices[device_label]
@@ -84,11 +96,15 @@ def device_packet_stats(data, device_label, known=False):
             'size_sent': size_s,
             'rss_sent':rss_s}
 
+
 def get_device_traffic_counts(data, device, rolling=False, grouped=True):
+    '''
+    returns all packets sent and received from a given device in a tup.
+    can specify whether the data is aggregated per second and whether the values are rolling means (useful for more interpretable plots).
+    '''
     traffic = []
 
     for call in ['Source', 'Destination']:
-
         packets = data[data[call].str.contains(device)]
 
         if grouped:
@@ -101,12 +117,25 @@ def get_device_traffic_counts(data, device, rolling=False, grouped=True):
 
     return tuple(traffic)
 
+
 def plot_device_traffic(data, device):
+    '''
+    plots rolling means of sent and received packet counts for a given device in a processed df.
+    '''
     source, destination = get_device_traffic_counts(data, device, rolling=True)
     plt.plot(source, color='#2ab74f')
     plt.plot(destination, color='#e05077')
     plt.savefig('actvity-plots/' + device + '.png')
     plt.close('all')
 
+
 def get_top_devices(data, head):
-    return list(data.groupby(['Source'])['Time'].agg({"count": len}).sort_values("count", ascending=False).head(head).reset_index()['Source'])
+    '''
+    returns a list of top n devices in a processed df by total packet count.
+    '''
+    return list(data\
+            .groupby(['Source'])['Time']\
+            .agg({"count": len})\
+            .sort_values("count", ascending=False)\
+            .head(head)\
+            .reset_index()['Source'])
