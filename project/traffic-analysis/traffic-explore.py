@@ -55,6 +55,20 @@ devices = {'yuxirouter':'Netgear_7a:52:d',
             'camera':'Shenzhen_ca:20:ad'
             }
 
+def plot_rss(file):
+    data = pd.read_csv(file)
+    preprocess(data)
+
+    chromecast = data[data['Source'].str.contains('Google_64:38:38')]
+    router = data[data['Source'].str.contains('Netgear_7a:52:db')]
+    phone = data[data['Source'].str.contains('Htc_8b:b0:b3')]
+
+    plt.plot(phone.RSSI.rolling(window=20, win_type='triang').mean().dropna(), color = 'green')
+    plt.plot(router.RSSI.rolling(window=20, win_type='triang').mean().dropna(), color = 'blue')
+    plt.plot(chromecast.RSSI.rolling(window=20, win_type='triang').mean().dropna(), color = 'red')
+
+    plt.show()
+
 def preprocess(df):
     '''
     cleans df of packet data and discretises time variable.
