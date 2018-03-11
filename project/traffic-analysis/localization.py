@@ -21,7 +21,7 @@ def c_fit(tx):
 	                             (tx.loc_x,tx.loc_y),
 	                             tx.RSSI,
 	                             maxfev=250000,
-	                             bounds=((-100,-5,-20,-20),(30,5,40,40)))
+	                             bounds=((-100,-5,0,0),(30,5,40,40)))
 	return popt
 
 
@@ -30,10 +30,8 @@ def fit(df, mac_addr, room_len, room_wid):
     checks for mac addr in df and returns estimated coords
     '''
     time = list(df['Time'])
-    r = room_len/max(time)
-    y_loc = [(0, y*room_len/max(time)) for y in df['Time']]
 
-    tx = df[df['Source'] == mac_addr]
+    tx = df[df['Source'].str.contains(mac_addr)]
     y_loc = [(0, y*room_len/max(time)) for y in df['Time']]
     x_loc = [(x*room_wid/max(time)+10, room_len) for x in df['Time']]
     
