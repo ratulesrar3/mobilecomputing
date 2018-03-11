@@ -3,6 +3,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
 '''
 Yuxi router: Netgear_7a:52:d
@@ -55,6 +56,17 @@ devices = {'yuxirouter':'Netgear_7a:52:d',
             'camera':'Shenzhen_ca:20:ad'
             }
 
+def get_packets(outfile, duration=10):
+    '''
+    uses wireshark to capture traffic data and returns df
+    '''
+    pcap = outfile + '.pcap > '
+    csv = outfile + '.csv'
+    command = 'tshark -I -i en1 -a duration:' + str(duration) +' -T fields -E header=y -E separator=, -e frame.number -e _ws.col.Time -e _ws.col.Source -e _ws.col.Destination -e _ws.col.Length -e _ws.col.RSSI -w ' + pcap + csv
+    os.system(command)
+    return pd.read_csv(csv)
+
+
 def plot_rss(file):
     data = pd.read_csv(file)
     preprocess(data)
@@ -68,6 +80,7 @@ def plot_rss(file):
     plt.plot(chromecast.RSSI.rolling(window=20, win_type='triang').mean().dropna(), color = 'red')
 
     plt.show()
+
 
 def preprocess(df):
     '''
