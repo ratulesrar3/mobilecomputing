@@ -4,6 +4,7 @@ import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import math
 
 '''
 Yuxi router: Netgear_7a:52:d
@@ -122,6 +123,11 @@ def device_packet_stats(data, device_label, known=False):
             'packets_sent':num_s,
             'size_sent': size_s,
             'rss_sent':rss_s}
+
+def all_device_stats(data):
+    stats = pd.DataFrame([device_packet_stats(data, device) for device in set(data['Source'])])
+
+    s = stats[(math.isnan(stats['packets_received'])) & (math.isnan(stats['size_received'])) & (math.isnan(stats['rss_received']))]
 
 
 def get_device_traffic_counts(data, device, rolling=False, grouped=True):
