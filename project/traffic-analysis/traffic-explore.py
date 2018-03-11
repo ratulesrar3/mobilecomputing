@@ -54,6 +54,7 @@ devices = {'yuxirouter':'Netgear_7a:52:d',
             'yuxiphone':'Htc_8b:b0:b3',
             'jessmac':'Apple_eb:ec:bf',
             'maymac':'Apple_10:14:73',
+            'ratulmac':'Apple_42:64:32',
             'camera':'Shenzhen_ca:20:ad'
             }
 
