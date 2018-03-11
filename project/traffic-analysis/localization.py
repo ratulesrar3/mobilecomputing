@@ -29,20 +29,23 @@ def fit(df, mac_addr, room_len, room_wid):
     '''
     checks for mac addr in df and returns estimated coords
     '''
+    time = list(df['Time'])
+    r = room_len/max(time)
+    y_loc = [(0, y*room_len/max(time)) for y in df['Time']]
+
     tx = df[df['Source'] == mac_addr]
-    time = list(set(df['Second']))
-    y_loc = [(0, y*room_len/max(time)) for y in time]
-    x_loc = [(x*room_wid/max(time)+5, room_len) for x in time]
+    y_loc = [(0, y*room_len/max(time)) for y in df['Time']]
+    x_loc = [(x*room_wid/max(time)+10, room_len) for x in df['Time']]
     
     x_coords = [x for x,y in y_loc]
     y_coords = [y for x,y in y_loc]
 
     loc_dict = {'loc_x':x_coords,
     			'loc_y':y_coords,
-    			'Second':time}
+    			'Time':time}
 
-    loc_df = pd.DataFrame(loc_dict, columns=['loc_x','loc_y','Second'])
-    tx = tx.merge(loc_df, on='Second', how='left')
+    loc_df = pd.DataFrame(loc_dict, columns=['loc_x','loc_y','Time'])
+    tx = tx.merge(loc_df, on='Time', how='left')
 
     popts = c_fit(tx)
     return popts
