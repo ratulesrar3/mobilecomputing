@@ -62,7 +62,7 @@ def get_packets(outfile, default='en0', duration=10):
     '''
     pcap = outfile + '.pcap > '
     csv = outfile + '.csv'
-    command = 'tshark -I -i ' + default + ' -a duration:' + str(duration) +' -T fields -E header=y -E separator=, -e frame.number -e _ws.col.Time -e _ws.col.Source -e _ws.col.Destination -e _ws.col.Length -e _ws.col.RSSI -w ' + pcap + csv
+    command = 'tshark -I -i ' + default + ' -a duration:' + str(duration) +' -T fields -E header=y -E separator=, -e _ws.col.Time -e _ws.col.Source -e _ws.col.Destination -e _ws.col.Length -e _ws.col.RSSI -w ' + pcap + csv
     os.system(command)
     return pd.read_csv(csv)
 
