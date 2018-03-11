@@ -86,9 +86,9 @@ def preprocess(df):
     '''
     cleans df of packet data and discretises time variable.
     '''
+    df.columns = ['Time', 'Source', 'Destination', 'Length', 'RSSI']
     df.dropna(inplace=True)
     df['Second'] = np.ceil(df['Time'])
-    df.columns = ['Time', 'Source', 'Destination', 'Length', 'RSSI', 'Second']
     df['RSSI'] = df['RSSI'].str.strip(' dBm').astype('float64')
 
 
