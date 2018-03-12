@@ -125,10 +125,22 @@ def device_packet_stats(data, device_label, known=False):
             'size_sent': size_s,
             'rss_sent':rss_s}
 
-def all_device_stats(data):
+def all_device_stats(data, spy_or_facetime=0):
     stats = pd.DataFrame([device_packet_stats(data, device) for device in set(data['Source'])])
 
-    s = stats[(math.isnan(stats['packets_received'])) & (math.isnan(stats['size_received'])) & (math.isnan(stats['rss_received']))]
+    if spy_or_facetime == 0:
+        return stats[(stats['packets_received'].isna()) \
+            & (stats['size_received'].isna())\
+            & (stats['rss_received'].isna())\
+            & (stats['packets_sent'] == 2) \
+            & (stats['size_sent'].between(150, 200))]['device']
+    elif spy_or_facetime == 1:
+        return stats[(stats['packets_received']).between(75, 95)) \
+            & (stats['size_received'] > 100)\
+            & (stats['packets_sent'].between(60, 80)) \
+            & (stats['size_sent'] < 200)\
+            & (stats['size_sent'] > 150)]['device']
+
 
 
 def get_device_traffic_counts(data, device, rolling=False, grouped=True):
